@@ -1,6 +1,6 @@
 import discord
 from command import Action_Picker, show_help
-
+from extra_commands import show_planning
 #env file
 import os
 from os.path import join, dirname
@@ -15,6 +15,7 @@ client = discord.Client()
 
 
 embedaction_dic = {'!aide':show_help,
+                   '!planning':show_planning
     }
 
 action_picker = Action_Picker(embeds = embedaction_dic)

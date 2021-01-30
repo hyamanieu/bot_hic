@@ -43,7 +43,7 @@ class Action_Picker():
         action_name = args[0]
         if action_name in self._list_embedactions: #check if it's in the list of Embeds
             action_emb = self._list_embedactions[action_name]
-            embed = action_emb()
+            embed = action_emb(*args)
             
             await message.channel.send(embed=embed)
     
@@ -60,13 +60,14 @@ class Action_Picker():
 
 
 
-def show_help():
+def show_help(*args):
     
     embed = discord.Embed()
     
     msg = ""
     msg += "==== Hacking Industry Camp - AIDE ====\n"
     msg += "- `!aide` : obtenir l'aide\n"
+    msg += "- `!planning [vendredi]` : obtenir le planning\n"
     
     
     field_name = "Aide"

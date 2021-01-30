@@ -1,6 +1,6 @@
 import discord
 from command import Action_Picker, show_help
-from extra_commands import show_planning, check_role
+from extra_commands import show_planning, check_role, make_group
 #env file
 import os
 from os.path import join, dirname
@@ -18,7 +18,8 @@ embedaction_dic = {'!aide':show_help,
                    '!planning':show_planning
     }
 
-processor_dic = {'!role': check_role}
+processor_dic = {'!role': check_role,
+                 '!teamup': make_group}
 
 action_picker = Action_Picker(embeds = embedaction_dic,
                               processors=processor_dic)

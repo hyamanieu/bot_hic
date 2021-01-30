@@ -8,10 +8,12 @@ Created on Sat Jan 30 14:57:28 2021
 import bs4
 import urllib.request
 import discord
+import shlex
 
 import requests
 from pdfminer.high_level import extract_text
 from io import BytesIO
+import argparse
 
 
 def show_planning(*args):
@@ -81,17 +83,96 @@ def show_planning(*args):
 
 async def check_role(message):
     author = message.author
-    server = message.guild
-    content = message.content
     
     role_names = [r.name for  r in author.roles]
     if '@admin' in role_names:
         await message.add_reaction('\U0001F9BE')
-        return f"T'es {role_names}!"
     else:
         await message.add_reaction('\U0001F44E')
-        return f"T'es {role_names}!"
         
         
+        
+class NonexitParser(argparse.ArgumentParser):
+
+    def error(self, message):
+        raise ValueError('Mal fait!')
+
+
+
+async def make_group(message):
+    """
+    respond to the following request (considering caller is !teamup)
+    
+    !teamup -n nom_de_lequipe -chef chef_de_projet -membres membre1 membre2 membre3
+    
+    
+    Parameters
+    ----------
+    message : discord Message
+    Returns
+    -------
+    str
+        simple stirng to return as message
+
+    """
+    author = message.author
+    server = message.guild
+    content = message.content
+    mentions = message.mentions
+    
+    
+    role_names = [r.name for  r in author.roles]
+    if '@admin' not in role_names:
+        await message.add_reaction('\U0001F44E')
+        return "seuls les admins peuvent faire cette action!"
+    
+    args = shlex.split(content)
+    
+    parser = NonexitParser(description='arguments to teamup.')
+    parser.add_argument('-n', dest='rolename', required=True)
+    parser.add_argument('-chef', dest='teamleader', required=True)
+    parser.add_argument('-membres', nargs='+', dest='members', required=True)
+    
+    
+    
+    try:
+        ns = parser.parse_args(args=args[1:])
+    except ValueError:
+        await message.add_reaction('\U0001F44E')
+        return "Erreur! La commande est du type `!teamup -n nom_de_lequipe -chef chef_de_projet -membres membre1 membre2 membre3`"
+    
+    
+    serv_roles = await server.fetch_roles()
+    if ns.rolename not in [r.name for r in serv_roles]:
+        teamrole = await server.create_role(name=ns.rolename,
+                                           mentionable=True,
+                                           reason="admin through bot")
+    else:
+        await message.add_reaction('\U0001F44E')
+        return f"L'équipe {ns.rolename} existe déjà."
+        
+    
+    print("mentions: ",mentions)
+    print('members: ', ns.teamleader, ns.members)
+    for member in mentions:
+        if str(member.id) in ns.teamleader:
+            if 'chefdeproj' not in [r.name for r in serv_roles]:
+                cdp_role = await server.create_role(name='chefdeproj',
+                                           mentionable=True,
+                                           reason="admin through bot")
+            else:
+                for r in serv_roles:
+                    if r.name == 'chefdeproj':
+                        cdp_role = r
+                        break
+            await member.add_roles(teamrole, cdp_role)
+        else:
+            await member.add_roles(teamrole)
+    
+    await message.add_reaction('\U0001F9BE')
+    
+    return "Tout le monde est rajouté, manque plus qu'un salon!"
+    
+    
         
     

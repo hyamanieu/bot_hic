@@ -1,5 +1,5 @@
 import discord
-from command import *
+from command import Action_Picker, show_help
 
 #env file
 import os
@@ -14,6 +14,10 @@ TOKEN = os.getenv('BOT_TOKEN')
 client = discord.Client()
 
 
+action_dic = {'!aide':show_help,
+    }
+
+action_picker = Action_Picker(action_dic)
 
 @client.event
 async def on_ready():
@@ -27,7 +31,7 @@ async def on_message(message):
         return
 
 
-    await choix_action(message)
+    await action_picker.choix_action(message)
 
     
 

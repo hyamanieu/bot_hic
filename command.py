@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import discord
 import shlex
 
 
 
 class Action_Picker():
-    _list_actions = dict()
+    _list_embedactions = dict()
     
     @classmethod
     def _assert_actions(cls, actions):
@@ -14,13 +16,14 @@ class Action_Picker():
             assert (type(k) is str) and (k.startswith('!')), "dict keys must be strings starting with '!'"
         
     
-    def __init__(self, actions):
-        self._assert_actions(actions)
-        self._list_actions.update(actions)
+    def __init__(self, embeds: None):
+        if embeds:
+            self._assert_actions(embeds)
+            self._list_embedactions.update(embeds)
         
-    def add_actions(self, actions):
-        self._assert_actions(actions)
-        self._list_actions.update(actions)
+    def add_embed(self, embeds):
+        self._assert_actions(embeds)
+        self._list_embedactions.update(embeds)
         
     
     async def choix_action(self,message):
@@ -32,25 +35,23 @@ class Action_Picker():
     
         
     
-        embed = discord.Embed()
             
     
         #début de l'interprétation des commandes
         args = shlex.split(message.content)
     
-        ok = False
         action_name = args[0]
-        if action_name in self._list_actions: #aide
-            action_func = self._list_actions[action_name]
-            field_name = action_name[1:].capitalize()
-            embed.add_field(name=field_name,value=action_func())
+        if action_name in self._list_embedactions: #check if it's in the list of Embeds
+            action_emb = self._list_embedactions[action_name]
+            embed = action_emb()
+            
             await message.channel.send(embed=embed)
-            ok = True
     
     
     
-        if not ok:       
+        else:       
             print("Instruction error")
+            embed = discord.Embed()
             embed.title = "Erreur"
             embed.description = "Instruction non valable - Entrez `!aide` pour obtenir l'aide"
             await message.channel.send(embed=embed)
@@ -60,8 +61,15 @@ class Action_Picker():
 
 
 def show_help():
+    
+    embed = discord.Embed()
+    
     msg = ""
     msg += "==== Hacking Industry Camp - AIDE ====\n"
     msg += "- `!aide` : obtenir l'aide\n"
+    
+    
+    field_name = "Aide"
+    embed.add_field(name=field_name,value=msg)
 
-    return msg
+    return embed

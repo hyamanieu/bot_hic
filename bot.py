@@ -14,10 +14,10 @@ TOKEN = os.getenv('BOT_TOKEN')
 client = discord.Client()
 
 
-action_dic = {'!aide':show_help,
+embedaction_dic = {'!aide':show_help,
     }
 
-action_picker = Action_Picker(action_dic)
+action_picker = Action_Picker(embeds = embedaction_dic)
 
 @client.event
 async def on_ready():

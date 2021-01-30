@@ -9,3 +9,9 @@ maximum par utilisateur (default 1)
 - permet de créer des équipes en indiquant les membres et crée un salon pour eux
 - permet d'appeler une équipe.
 - permet à un participant de ping tous les bénévoles en ligne lorsqu'il a besoin d'aide.
+
+## pré-requis
+paquets python à installer :
+- discord
+- shlex
+- python-dotenv

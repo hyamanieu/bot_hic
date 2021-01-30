@@ -6,7 +6,18 @@ import shlex
 
 
 class Action_Picker():
-    _list_embedactions = dict()
+    """
+    A class supporting different kind of responses for different commands.
+    commands always start with "!" followed by a single word
+    
+    Holds two types of actions :
+        embeds: simply reacts to a message content by returning an Embed object.
+        processors: make more complex actions (check user privileges!)
+    """
+    
+    
+    _list_embedactions = dict()#simply parsing
+    _list_processors = dict()
     
     @classmethod
     def _assert_actions(cls, actions):
@@ -16,15 +27,19 @@ class Action_Picker():
             assert (type(k) is str) and (k.startswith('!')), "dict keys must be strings starting with '!'"
         
     
-    def __init__(self, embeds: None):
+    def __init__(self, embeds= None, processors= None):
         if embeds:
-            self._assert_actions(embeds)
-            self._list_embedactions.update(embeds)
+            self.add_embed(embeds)
+        if processors:
+            self.add_processor(processors)
         
     def add_embed(self, embeds):
         self._assert_actions(embeds)
         self._list_embedactions.update(embeds)
         
+    def add_processor(self, processors):
+        self._assert_actions(processors)
+        self._list_processors.update(processors)
     
     async def choix_action(self,message):
     
@@ -47,7 +62,11 @@ class Action_Picker():
             
             await message.channel.send(embed=embed)
     
-    
+        elif action_name in self._list_processors:
+            proc = self._list_processors[action_name]
+            response = await proc(message)
+            
+            await message.channel.send(response)
     
         else:       
             print("Instruction error")

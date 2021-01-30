@@ -1,6 +1,6 @@
 import discord
 from command import Action_Picker, show_help
-from extra_commands import show_planning
+from extra_commands import show_planning, check_role
 #env file
 import os
 from os.path import join, dirname
@@ -18,7 +18,10 @@ embedaction_dic = {'!aide':show_help,
                    '!planning':show_planning
     }
 
-action_picker = Action_Picker(embeds = embedaction_dic)
+processor_dic = {'!role': check_role}
+
+action_picker = Action_Picker(embeds = embedaction_dic,
+                              processors=processor_dic)
 
 @client.event
 async def on_ready():

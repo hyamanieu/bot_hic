@@ -77,3 +77,21 @@ def show_planning(*args):
         
         
     return embed
+
+
+async def check_role(message):
+    author = message.author
+    server = message.guild
+    content = message.content
+    
+    role_names = [r.name for  r in author.roles]
+    if '@admin' in role_names:
+        await message.add_reaction('\U0001F9BE')
+        return f"T'es {role_names}!"
+    else:
+        await message.add_reaction('\U0001F44E')
+        return f"T'es {role_names}!"
+        
+        
+        
+    

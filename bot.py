@@ -20,7 +20,7 @@ bot = commands.Bot(command_prefix='!',  case_insensitive=True)
 
 REACTIONS_YESNO = ['✅', '❌']
 REACTIONS_MULTI = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
-
+VOTING_CHANNEL_ID = 805511910920683530
 
 @bot.event
 async def on_ready():
@@ -136,7 +136,6 @@ async def teamadd(ctx, nom_de_lequipe: discord.Role, members: commands.Greedy[di
     message = ctx.message
     author = ctx.author
     role_names = [r.name for  r in author.roles]
-    print(role_names)
     if 'admins' not in role_names:
         await message.add_reaction('\U0001F44E')
         await ctx.send("seuls les admins peuvent faire cette action!")
@@ -159,7 +158,6 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
     
     
     role_names = [r.name for  r in author.roles]
-    print(role_names)
     if 'admins' not in role_names:
         await message.add_reaction('\U0001F44E')
         await ctx.send("seuls les admins peuvent faire cette action!")
@@ -179,8 +177,6 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
         await ctx.send(f"L'équipe {nom_de_lequipe} existe déjà. Utilisez `!teamadd` pour rajouter des membres.")
         return
         
-    
-    print('members: ', chef_de_projet, members)
     
     #check if chefdeproj role already exists. If not, creates it.
     if 'chefdeproj' not in [r.name for r in serv_roles]:
@@ -232,7 +228,6 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
 @teamup.error
 async def teamup_error(ctx, error):
     message = ctx.message
-    print(error)
     if isinstance(error, commands.BadArgument) or (isinstance(error, commands.MissingRequiredArgument)):
         await message.add_reaction('\U0001F44E')
         await ctx.send("Erreur! La commande est du type `!teamup nom_de_lequipe chef_de_projet membre1 membre2 membre3`")
@@ -242,11 +237,13 @@ async def teamup_error(ctx, error):
 
 @bot.command()
 async def new_poll(ctx, question: str,maxvotes: int=1, *options: str):
-    "Faire un nouveau vote."
+    "Faire un nouveau sondage."
     message = ctx.message
     author = ctx.author
     role_names = [r.name for  r in author.roles]
-    print(role_names)
+    
+    voting_channel = discord.utils.get(bot.get_all_channels(), id=VOTING_CHANNEL_ID)
+    
     if 'admins' not in role_names:
         await message.add_reaction('\U0001F44E')
         await ctx.send("seuls les admins peuvent faire cette action!")
@@ -275,18 +272,18 @@ async def new_poll(ctx, question: str,maxvotes: int=1, *options: str):
     for x, option in enumerate(options):
         description += '\n {} {}'.format(reactions[x], option)
     embed = discord.Embed(title=question, description=''.join(description))
-    react_message = await ctx.send(embed=embed)
+    react_message = await voting_channel.send(embed=embed)
     for reaction in reactions[:len(options)]:
         await react_message.add_reaction(reaction)
-    print(str(react_message.id))
-    embed.set_footer(text=f'Poll {maxvotes} : ' + str(react_message.id))
+    embed.set_footer(text=f'{maxvotes} Poll : ' + str(react_message.id))
     await react_message.edit(embed=embed)
+    
+    await ctx.send(f"Le sondage est prêt! Il se trouve sur <#{voting_channel.id}>")
     
     
 @new_poll.error
 async def new_poll_error(ctx, error):
     message = ctx.message
-    print(error)
     if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
         await message.add_reaction('\U0001F44E')
         await ctx.send("Erreur! La commande est du type `!new_poll \"question\" nombre_max_de_vote \"opt1\" \"opt2\"...`")
@@ -324,6 +321,7 @@ async def reset_poll(ctx, id: int):
 # supprime un sondage
 @bot.command()
 async def destroy_poll(ctx, id: int):
+    "Détruit un sondage définitivement. Attention! Fonctionne sur tout type de message."
     message = ctx.message
     author = ctx.author
     role_names = [r.name for  r in author.roles]
@@ -336,6 +334,42 @@ async def destroy_poll(ctx, id: int):
     await message.delete()
 
 
+@bot.command()
+async def close_poll(ctx, id: int):
+    message = ctx.message
+    author = ctx.author
+    role_names = [r.name for  r in author.roles]
+    print(role_names)
+    if 'admins' not in role_names:
+        await message.add_reaction('\U0001F44E')
+        await ctx.send("seuls les admins peuvent faire cette action!")
+        return
+    
+    
+    called_msg = await ctx.fetch_message(id)
+    
+    for e in called_msg.embeds:
+        #check if it's a reaction to a vote
+        if ('Poll' in e.footer.text):
+            description = e.description
+            title = '~~'+e.title+ '~~ (terminé)'
+            
+    description += '\n**Résultat final:**\n'
+    
+
+    msg_react = called_msg.reactions
+    
+    for r in msg_react:
+        description+= f'{r.emoji}: {r.count}\n'
+        await r.clear()
+    
+    
+    embed = discord.Embed(title=title, description=description)
+    
+    embed.set_footer(text='Sondage terminé')
+    await called_msg.edit(embed=embed)
+    
+
 @bot.event
 async def on_reaction_add(reaction, user):
     message = reaction.message
@@ -343,6 +377,9 @@ async def on_reaction_add(reaction, user):
     emoji = reaction.emoji
     number_of_votes = 0
     
+    if channel.id != VOTING_CHANNEL_ID:
+        #reacts only on vote channel are processed
+        return
     
     if message.author != bot.user:
         #chek whether bot actually posted the reacted message, otherwise ignores
@@ -354,6 +391,7 @@ async def on_reaction_add(reaction, user):
     
     if (emoji not in REACTIONS_YESNO) and (emoji not in REACTIONS_MULTI):
         #only vote reactions are accepted
+        await reaction.remove(user)
         return
     
     
@@ -363,7 +401,7 @@ async def on_reaction_add(reaction, user):
         if ('Poll' in e.footer.text):
             title = e.title
             try:
-                maxvotes = int(e.footer.text.split()[1])
+                maxvotes = int(e.footer.text.split()[0])
             except:
                 return
             break

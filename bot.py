@@ -128,6 +128,8 @@ async def teamadd(ctx, nom_de_lequipe: discord.Role, members: commands.Greedy[di
     """"`!teamadd membre1 membre2`: rajouter des participants à une équipe."""
     for member in members:
         await member.add_roles(nom_de_lequipe)
+        await ctx.message.add_reaction('\U0001F9BE')
+        
 
 @bot.command()
 async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, members: commands.Greedy[discord.Member]):
@@ -138,13 +140,14 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
     message = ctx.message
     author = ctx.author
     server = ctx.guild
-    mentions = message.mentions
     
     
     role_names = [r.name for  r in author.roles]
-    if '@admin' not in role_names:
+    print(role_names)
+    if 'admins' not in role_names:
         await message.add_reaction('\U0001F44E')
         await ctx.send("seuls les admins peuvent faire cette action!")
+        return
     
     
     
@@ -158,9 +161,9 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
     else:
         await message.add_reaction('\U0001F44E')
         await ctx.send(f"L'équipe {nom_de_lequipe} existe déjà. Utilisez `!teamadd` pour rajouter des membres.")
+        return
         
     
-    print("mentions: ",mentions)
     print('members: ', chef_de_projet, members)
     
     #check if chefdeproj role already exists. If not, creates it.
@@ -182,18 +185,44 @@ async def teamup(ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, membe
     
     await message.add_reaction('\U0001F9BE')
     
-    await ctx.send("Tout le monde est rajouté, manque plus qu'un salon!")
     
+    msg = (f"Tout le monde a été rajouté dans l'équipe {teamrole.name}, et "
+           f"{chef_de_projet.name} "
+           f"a été rajouté aux {cdp_role.name}.\n"
+            " il ne manque plus qu'un salon!")
+    
+    await ctx.send(msg)
+    
+    overwrites = {
+        server.default_role: discord.PermissionOverwrite(read_messages=False),
+        teamrole: discord.PermissionOverwrite(read_messages=True),
+    }
+    
+    for r in serv_roles:
+        if r.name.lower() in ['admins','benevoles','bénévoles','coach']:
+            overwrites[r]=discord.PermissionOverwrite(read_messages=True)
+    
+    team_cat = await server.create_category(f'salons de {nom_de_lequipe}',
+                                             overwrites=overwrites,
+                                             reason='Nouvelle équipe')
+    
+    text = await team_cat.create_text_channel('Chat')
+    voice = await team_cat.create_voice_channel('Vocal')
+    msg = (f"C'est bon! <@&{teamrole.id}> vous pouvez vous rendre sur"
+           f"<#{text.id}> et <#{voice.id}>.")
+    await ctx.send(msg)
     
         
 @teamup.error
 async def teamup_error(ctx, error):
     message = ctx.message
+    print(error)
     if isinstance(error, commands.BadArgument):
         await message.add_reaction('\U0001F44E')
         await ctx.send("Erreur! La commande est du type `!teamup nom_de_lequipe chef_de_projet membre1 membre2 membre3`")
     
 
-bot.run(TOKEN)
+if __name__ == "__main__":
+    bot.run(TOKEN)
 
 

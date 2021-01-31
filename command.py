@@ -3,8 +3,7 @@
 import discord
 import shlex
 
-
-
+#This class is useless now!
 class Action_Picker():
     """
     A class supporting different kind of responses for different commands.
@@ -77,19 +76,3 @@ class Action_Picker():
 
 
 
-
-
-def show_help(*args):
-    
-    embed = discord.Embed()
-    
-    msg = ""
-    msg += "==== Hacking Industry Camp - AIDE ====\n"
-    msg += "- `!aide` : obtenir l'aide\n"
-    msg += "- `!planning [vendredi]` : obtenir le planning\n"
-    
-    
-    field_name = "Aide"
-    embed.add_field(name=field_name,value=msg)
-
-    return embed

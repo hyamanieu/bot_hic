@@ -14,4 +14,3 @@ beautifulsoup4 = '4.9.3'
 structlog = "*"
 requests = "*"
 "pdfminer.six" = "*"
-quart = "*"

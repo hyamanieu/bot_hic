@@ -11,8 +11,11 @@ from pdfminer.high_level import extract_text
 from io import BytesIO
 import typing
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+env_file_path=dirname(__file__), '.env'
+
+if os.path.exists(env_file_path):
+    dotenv_path = join(env_file_path)
+    load_dotenv(dotenv_path)
 
 TOKEN = os.getenv('BOT_TOKEN')
 

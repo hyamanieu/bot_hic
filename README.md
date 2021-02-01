@@ -27,5 +27,4 @@ paquets python à installer :
 - discord
 - shlex
 - python-dotenv
-- beautifullsoup (bs4)
 - pdfminer.six

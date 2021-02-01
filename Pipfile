@@ -9,5 +9,4 @@ python_version = '3.8'
 [packages]
 discord.py = '>1.6.0'
 python-dotenv = '0.15.0'
-beautifulsoup4 = '4.9.3'
 pdfminer.six = '20201018'

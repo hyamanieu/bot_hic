@@ -16,17 +16,21 @@ dotenv_path = join(dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
-TOKEN = os.getenv('BOT_TOKEN')
-
 bot = commands.Bot(command_prefix='!',  case_insensitive=True)
 
 REACTIONS_YESNO = ['✅', '❌']
 REACTIONS_MULTI = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
 VOTING_CHANNEL_ID = 805511910920683530
+BOT_LOG_CHANNEL_ID = None
+
+TOKEN = os.getenv('BOT_TOKEN')
+
+BOT_LOG_CHANNEL_ID = os.getenv('BOT_LOG_CHANNEL_ID')
 
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
+    await post_version_message()
 
 
 
@@ -419,6 +423,19 @@ async def on_reaction_add(reaction, user):
                 await channel.send(f'<@!{user.id}> ne peut plus voter à "{title}", c\'est son vote n°{number_of_votes}/{maxvotes}')
                 return
     await channel.send(f'{user.name} a voté {reaction.emoji} à "{title}", c\'est son vote n°{number_of_votes}/{maxvotes}')
+
+async def bot_log_message(*args, **kwargs):
+    if BOT_LOG_CHANNEL_ID:
+        bot_log_channel = discord.utils.get(bot.get_all_channels(), id=BOT_LOG_CHANNEL_ID)
+        
+        await bot_log_channel.send(*args, **kwargs)
+
+async def post_version_message(ctx):
+    SCALINGO_CONTAINER_VERSION=os.getenv('CONTAINER_VERSION')
+    SCALINGO_APP=os.getenv('APP')
+    
+    if SCALINGO_CONTAINER_VERSION and SCALINGO_APP:
+        await bot_log_message(f"{SCALINGO_APP} a démarré en version {SCALINGO_CONTAINER_VERSION}>")
 
 if __name__ == "__main__":
     bot.run(TOKEN)

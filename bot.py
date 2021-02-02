@@ -434,7 +434,10 @@ async def bot_log_message(*args, **kwargs):
             BOT_LOG_CHANNEL_ID = int(BOT_LOG_CHANNEL_ID)
             bot_log_channel = discord.utils.get(bot.get_all_channels(), id=BOT_LOG_CHANNEL_ID)
             
-            await bot_log_channel.send(*args, **kwargs)
+            if bot_log_channel:
+                await bot_log_channel.send(*args, **kwargs)
+            else:
+                log.warning(f'Could not find bot log channel with id {BOT_LOG_CHANNEL_ID}')
     except Exception as e:
         log.error('Could not post message to bot log channel', exc_info=e)
 
@@ -443,7 +446,7 @@ async def post_version_message():
     SCALINGO_APP=os.getenv('APP')
     
     if SCALINGO_CONTAINER_VERSION and SCALINGO_APP:
-        await bot_log_message(f"{SCALINGO_APP} a démarré en version {SCALINGO_CONTAINER_VERSION}>")
+        await bot_log_message(f"{SCALINGO_APP} a démarré en version {SCALINGO_CONTAINER_VERSION}")
 
 if __name__ == "__main__":
     bot.run(TOKEN)

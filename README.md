@@ -2,7 +2,7 @@
 
 Un bot discord pour le HIC2021
 
-## objectifs
+## Objectifs
 
 # MUST
 - permet de créer des équipes en indiquant les membres et crée un salon pour eux
@@ -13,19 +13,15 @@ Un bot discord pour le HIC2021
   - pouvoir configurer les channels
   - pouvoir configurer une fréquence de répétition
 
-
 # MAY
 - donne l'agenda sur simple commande
 - annonce les évènements de l'agenda sur des channels spécifiés, en donnant le temps restant avant le début
 - peut créer un système de vote sondage avec un nombre de votes 
 maximum par utilisateur (default 1)
 
-
-
-## pré-requis
+## Pré-requis
 paquets python à installer :
 - discord
 - shlex
 - python-dotenv
-- beautifullsoup (bs4)
 - pdfminer.six

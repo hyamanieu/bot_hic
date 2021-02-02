@@ -10,7 +10,6 @@ python_version = '3.8'
 flask-apscheduler = "*"
 discord = {py = '>1.6.0'}
 python-dotenv = '0.15.0'
-beautifulsoup4 = '4.9.3'
 structlog = "*"
 requests = "*"
 "pdfminer.six" = "*"

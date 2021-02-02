@@ -430,7 +430,7 @@ async def bot_log_message(*args, **kwargs):
         
         await bot_log_channel.send(*args, **kwargs)
 
-async def post_version_message(ctx):
+async def post_version_message():
     SCALINGO_CONTAINER_VERSION=os.getenv('CONTAINER_VERSION')
     SCALINGO_APP=os.getenv('APP')
     

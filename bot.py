@@ -14,7 +14,8 @@ if os.path.exists(dotenv_path):
 
 TOKEN = os.getenv('BOT_TOKEN')
 
-bot = commands.Bot(command_prefix='!',  case_insensitive=True)
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix='!',  case_insensitive=True, intents=intents)
 
 @bot.event
 async def on_ready():
@@ -50,7 +51,8 @@ if __name__ == "__main__":
         'extensions.planning',
         'extensions.admin',
         'extensions.team',
-        'extensions.poll'
+        'extensions.poll',
+        'extensions.welcome'
     ]
 
     for extension in EXTENSIONS:

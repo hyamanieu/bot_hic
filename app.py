@@ -1,5 +1,6 @@
 from sys import exc_info
 from flask import Flask, g
+
 #import Flask-APScheduler
 from flask_apscheduler import APScheduler
 import apscheduler.events
@@ -47,8 +48,6 @@ def run_bot():
     except Exception as e:
         log.error('bot crash', exc_info=e)
 
-#scheduler.add_job(func=run_bot, trigger='interval', id='run_bot', seconds=30, max_instances=1)
-
 def scheduler_event_listener(event: apscheduler.events.JobExecutionEvent):
     log.info('scheduler event', evt=event)
     if event.exception:
@@ -59,7 +58,7 @@ def scheduler_event_listener(event: apscheduler.events.JobExecutionEvent):
 
 scheduler.add_listener(scheduler_event_listener, apscheduler.events.EVENT_JOB_EXECUTED | apscheduler.events.EVENT_JOB_ERROR)
 
-@scheduler.task(trigger='interval', seconds=3)
+@scheduler.task(trigger='interval', seconds=60)
 def tick():
     print('Tick! The time is: %s' % datetime.datetime.now())
     

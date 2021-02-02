@@ -10,6 +10,9 @@ import requests
 from pdfminer.high_level import extract_text
 from io import BytesIO
 import typing
+import structlog
+
+log=structlog.get_logger()
 
 dotenv_path = join(dirname(__file__), '.env')
 
@@ -425,10 +428,14 @@ async def on_reaction_add(reaction, user):
     await channel.send(f'{user.name} a voté {reaction.emoji} à "{title}", c\'est son vote n°{number_of_votes}/{maxvotes}')
 
 async def bot_log_message(*args, **kwargs):
-    if BOT_LOG_CHANNEL_ID:
-        bot_log_channel = discord.utils.get(bot.get_all_channels(), id=BOT_LOG_CHANNEL_ID)
-        
-        await bot_log_channel.send(*args, **kwargs)
+    try:
+        if BOT_LOG_CHANNEL_ID:
+            BOT_LOG_CHANNEL_ID = int(BOT_LOG_CHANNEL_ID)
+            bot_log_channel = discord.utils.get(bot.get_all_channels(), id=BOT_LOG_CHANNEL_ID)
+            
+            await bot_log_channel.send(*args, **kwargs)
+    except Exception as e:
+        log.error('Could not post message to bot log channel', exc_info=e)
 
 async def post_version_message():
     SCALINGO_CONTAINER_VERSION=os.getenv('CONTAINER_VERSION')

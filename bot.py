@@ -32,7 +32,7 @@ BOT_LOG_CHANNEL_ID = os.getenv('BOT_LOG_CHANNEL_ID')
 
 @bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
+    log.info('We have logged in as {0.user}'.format(bot))
     await post_version_message()
 
 
@@ -428,6 +428,7 @@ async def on_reaction_add(reaction, user):
     await channel.send(f'{user.name} a voté {reaction.emoji} à "{title}", c\'est son vote n°{number_of_votes}/{maxvotes}')
 
 async def bot_log_message(*args, **kwargs):
+    global BOT_LOG_CHANNEL_ID
     try:
         if BOT_LOG_CHANNEL_ID:
             BOT_LOG_CHANNEL_ID = int(BOT_LOG_CHANNEL_ID)

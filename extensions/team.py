@@ -49,10 +49,10 @@ class TeamCog(commands.Cog):
 
         Rajouter une equipe avec son salon.
         """
-
+        
         message = ctx.message
         author = ctx.author
-        server = ctx.guild
+        server: discord.Guild = ctx.guild
         role_names = [r.name for  r in author.roles]
 
         if 'admins' not in role_names:
@@ -107,12 +107,25 @@ class TeamCog(commands.Cog):
             if r.name.lower() in ['admins','benevoles','bénévoles','coach']:
                 overwrites[r]=discord.PermissionOverwrite(read_messages=True)
         
-        team_cat = await server.create_category(f'salons de {nom_de_lequipe}',
-                                                    overwrites=overwrites,
-                                                    reason='Nouvelle équipe')
+        # team_cat = await server.create_category(f'PARTICIPANTS',
+        #                                             overwrites=overwrites,
+        #                                             reason='Nouvelle équipe')
         
-        text = await team_cat.create_text_channel('Chat')
-        voice = await team_cat.create_voice_channel('Vocal')
+        team_cat = None
+        
+        for cat in server.categories:
+            if cat.name=='PARTICIPANTS':
+                team_cat=cat
+                break
+            
+        if team_cat is None:
+            await message.add_reaction('\U0001F44E')
+            await ctx.send("Erreur! Catégorie 'PARTICIPANTS' introuvable")
+            return
+        
+        text = await team_cat.create_text_channel(nom_de_lequipe)
+        voice = await team_cat.create_voice_channel(nom_de_lequipe)
+        
         msg = (f"C'est bon! <@&{teamrole.id}> vous pouvez vous rendre sur"
                 f"<#{text.id}> et <#{voice.id}>.")
         

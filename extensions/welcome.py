@@ -36,10 +36,10 @@ class WelcomeCog(commands.Cog):
 
                 if len(data) >= 4:
                     self.users.append({
-                        'name': data[0],
-                        'firstname': data[1],
-                        'mail': data[2],
-                        'role': data[3]
+                        'name': data[0].strip(),
+                        'firstname': data[1].strip(),
+                        'mail': data[2].strip(),
+                        'role': data[3].strip()
                     })
 
     @commands.Cog.listener()

@@ -124,7 +124,7 @@ class TeamCog(commands.Cog):
             return
         
         text = await team_cat.create_text_channel(nom_de_lequipe)
-        voice = await team_cat.create_voice_channel(nom_de_lequipe)
+        voice = await team_cat.create_voice_channel(nom_de_lequipe.lower())
         
         msg = (f"C'est bon! <@&{teamrole.id}> vous pouvez vous rendre sur"
                 f"<#{text.id}> et <#{voice.id}>.")

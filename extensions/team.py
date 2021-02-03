@@ -61,6 +61,8 @@ class TeamCog(commands.Cog):
             return
         
         serv_roles = await server.fetch_roles()
+        
+        teamrole: discord.Role = None
 
         if nom_de_lequipe not in [r.name for r in serv_roles]:
             teamrole = await server.create_role(name=nom_de_lequipe,
@@ -123,8 +125,17 @@ class TeamCog(commands.Cog):
             await ctx.send("Erreur! Catégorie 'PARTICIPANTS' introuvable")
             return
         
-        text = await team_cat.create_text_channel(nom_de_lequipe)
+        text: discord.TextChannel = await team_cat.create_text_channel(nom_de_lequipe)
+        
+        overwrite = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        
+        await text.set_permissions(teamrole, overwrite, reason='Team setup')
+        
         voice = await team_cat.create_voice_channel(nom_de_lequipe.lower())
+        
+        overwrite = discord.PermissionOverwrite(speak=True, connect=True)
+        
+        await voice.set_permissions(teamrole, overwrite, reason='Team setup')
         
         msg = (f"C'est bon! <@&{teamrole.id}> vous pouvez vous rendre sur"
                 f"<#{text.id}> et <#{voice.id}>.")

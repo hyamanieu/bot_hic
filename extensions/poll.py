@@ -88,6 +88,7 @@ class PollCog(commands.Cog):
         await ctx.send(f"Le sondage est prêt! Il se trouve sur <#{voting_channel.id}>")
 
     @commands.command(name='reset_poll')
+    @commands.check(perms.is_support_user)
     async def reset_poll(self, ctx, id: int):
         """
         Reset un poll identifié par `id`. l'`id` d'un vote se trouve sous chaque vote
@@ -119,6 +120,7 @@ class PollCog(commands.Cog):
             await called_msg.add_reaction(r.emoji)
 
     @commands.command(name='destroy_poll')
+    @commands.check(perms.is_support_user)
     async def destroy_poll(self, ctx, id: int):
         """
         Détruit un sondage définitivement. Attention! Fonctionne sur tout type de message.
@@ -141,6 +143,7 @@ class PollCog(commands.Cog):
         await message.delete()
 
     @commands.command(name='close_poll')
+    @commands.check(perms.is_support_user)
     async def close_poll(self, ctx, id: int):
         """
         """

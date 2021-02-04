@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
 
+from . import perms
 class AdminCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.check(perms.is_support_user)
     @commands.command(name='admin')
     async def admin(self, ctx):
         """

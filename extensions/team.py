@@ -127,16 +127,21 @@ class TeamCog(commands.Cog):
         
         text: discord.TextChannel = await team_cat.create_text_channel(nom_de_lequipe)
         
-        overwrite = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        perms = text.overwrites_for(teamrole)
+        perms.send_messages=True
+        perms.read_messages=True
         
-        await text.set_permissions(teamrole, overwrite, reason='Team setup')
+        await text.set_permissions(teamrole, overwrite=perms)
+
         
         voice = await team_cat.create_voice_channel(nom_de_lequipe.lower())
         
-        overwrite = discord.PermissionOverwrite(speak=True, connect=True)
+        perms = voice.overwrites_for(teamrole)
+        perms.connect=True
+        perms.speak=True
         
-        await voice.set_permissions(teamrole, overwrite, reason='Team setup')
-        
+        await voice.set_permissions(teamrole, overwrite=perms)
+                
         msg = (f"C'est bon! <@&{teamrole.id}> vous pouvez vous rendre sur"
                 f"<#{text.id}> et <#{voice.id}>.")
         

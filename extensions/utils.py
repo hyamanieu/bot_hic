@@ -31,7 +31,7 @@ class UtilsCog(commands.Cog):
             log.error('Could not post message to bot log channel', exc_info=e)
             
     async def trace_exception(self, *args, exc_info=None, **kwargs):
-        s=f"Exception: {*args} {kwargs}\n"
+        s=f"Exception: {args} {kwargs}\n"
         s+=traceback.format_stack()
         await self.bot_log_message(s)
         

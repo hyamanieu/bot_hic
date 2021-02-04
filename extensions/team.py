@@ -130,6 +130,9 @@ class TeamCog(commands.Cog):
         perms = text.overwrites_for(teamrole)
         perms.send_messages=True
         perms.read_messages=True
+        perms.attach_files=True
+        perms.embed_links=True
+        perms.read_message_history=True
         
         await text.set_permissions(teamrole, overwrite=perms)
 
@@ -139,6 +142,10 @@ class TeamCog(commands.Cog):
         perms = voice.overwrites_for(teamrole)
         perms.connect=True
         perms.speak=True
+        perms.view_channel=True
+        perms.stream=True
+        perms.use_voice_activation=True
+        
         
         await voice.set_permissions(teamrole, overwrite=perms)
                 

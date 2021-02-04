@@ -55,6 +55,7 @@ if __name__ == "__main__":
         'extensions.admin',
         'extensions.team',
         'extensions.poll',
+        'extensions.utils',
         'extensions.welcome'
     ]
 

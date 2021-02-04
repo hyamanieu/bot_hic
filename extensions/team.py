@@ -50,6 +50,8 @@ class TeamCog(commands.Cog):
         Rajouter une equipe avec son salon.
         """
         
+        utils_cog = self.bot.get_cog('UtilsCog')
+        
         message = ctx.message
         author = ctx.author
         server: discord.Guild = ctx.guild
@@ -153,6 +155,10 @@ class TeamCog(commands.Cog):
                 f"<#{text.id}> et <#{voice.id}>.")
         
         await ctx.send(msg)
+        
+        await utils_cog.bot_log_message(f'Creation team <@&{teamrole.id}> OK')
+        
+        
 
 def setup(bot):
     bot.add_cog(TeamCog(bot))

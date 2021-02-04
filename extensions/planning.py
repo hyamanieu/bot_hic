@@ -6,6 +6,9 @@ from discord.ext import commands
 from pdfminer.high_level import extract_text
 
 class PlanningCog(commands.Cog):
+    """
+    Planning
+    """
     PLANNING_URL = 'https://www.hackingindustry.camp/Planning-HIC-2021.pdf'
 
     def __init__(self, bot):

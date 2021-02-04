@@ -5,6 +5,9 @@ from discord.ext import commands
 from . import perms
 
 class PollCog(commands.Cog):
+    """
+    Sondages
+    """
     REACTIONS_YESNO = ['✅', '❌']
     REACTIONS_MULTI = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
     VOTING_CHANNEL_ID = 805511910920683530

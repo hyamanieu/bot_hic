@@ -3,6 +3,9 @@ from discord.ext import commands
 from . import perms
 
 class TeamCog(commands.Cog):
+    """
+    Equipes
+    """
     def __init__(self, bot):
         self.bot = bot
 

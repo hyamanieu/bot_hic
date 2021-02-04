@@ -3,6 +3,9 @@ from discord.ext import commands
 
 from . import perms
 class AdminCog(commands.Cog):
+    """
+    Admin
+    """
     def __init__(self, bot):
         self.bot = bot
 

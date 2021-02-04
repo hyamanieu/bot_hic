@@ -2,6 +2,8 @@ import discord
 from discord import utils
 from discord.ext import commands
 
+from . import perms
+
 class PollCog(commands.Cog):
     REACTIONS_YESNO = ['✅', '❌']
     REACTIONS_MULTI = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
@@ -32,6 +34,7 @@ class PollCog(commands.Cog):
                 await ctx.send("Erreur! La commande est du type `!close_poll id`")
 
     @commands.command(name='new_poll')
+    @commands.check(perms.is_support_user)
     async def new_poll(self, ctx, question: str,maxvotes: int=1, *options: str):
         """
         Faire un nouveau sondage.

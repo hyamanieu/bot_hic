@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from . import perms
 
 class TeamCog(commands.Cog):
     def __init__(self, bot):
@@ -20,6 +21,7 @@ class TeamCog(commands.Cog):
         
 
     @commands.command(name='teamadd')
+    @commands.check(perms.is_support_user)
     async def teamadd(self, ctx, nom_de_lequipe: discord.Role, members: commands.Greedy[discord.Member]):
         """"
         Commande: !teamadd
@@ -44,6 +46,7 @@ class TeamCog(commands.Cog):
             await ctx.message.add_reaction('\U0001F9BE')
                 
     @commands.command(name='teamup')
+    @commands.check(perms.is_support_user)
     async def teamup(self, ctx, nom_de_lequipe: str, chef_de_projet: discord.Member, members: commands.Greedy[discord.Member]):
         """
         Commande: !teamup

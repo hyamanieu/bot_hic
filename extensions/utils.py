@@ -39,7 +39,7 @@ class UtilsCog(commands.Cog):
     async def crash_log(self, ctx):
         await self.bot_log_message("Testing crash log message")
         try:
-            1/0
+            raise "Test exception"
         except Exception as e:
             await self.trace_exception("It's only a test")
             

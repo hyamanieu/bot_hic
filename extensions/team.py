@@ -36,7 +36,7 @@ class TeamCog(commands.Cog):
 
         if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
-            await ctx.send("seuls les admins peuvent faire cette action!")
+            await ctx.send(f"seuls les admins ({utils_cog.settings.ADMIN_ROLE}) peuvent faire cette action!")
             return
         
         for member in members:
@@ -61,7 +61,7 @@ class TeamCog(commands.Cog):
 
         if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
-            await ctx.send("seuls les admins peuvent faire cette action!")
+            await ctx.send(f"seuls les admins ({utils_cog.settings.ADMIN_ROLE}) peuvent faire cette action!")
             return
         
         serv_roles = await server.fetch_roles()

@@ -1,4 +1,5 @@
 import discord
+from discord import utils
 from discord.ext import commands
 
 class PollCog(commands.Cog):
@@ -35,14 +36,16 @@ class PollCog(commands.Cog):
         """
         Faire un nouveau sondage.
         """
+        
+        utils_cog = self.bot.get_cog('UtilsCog')
 
         message = ctx.message
         author = ctx.author
         role_names = [r.name for  r in author.roles]
         
-        voting_channel = discord.utils.get(bot.get_all_channels(), id=VOTING_CHANNEL_ID)
+        voting_channel = discord.utils.get(self.bot.get_all_channels(), id=VOTING_CHANNEL_ID)
         
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return
@@ -86,6 +89,8 @@ class PollCog(commands.Cog):
         """
         Reset un poll identifié par `id`. l'`id` d'un vote se trouve sous chaque vote
         """
+        
+        utils_cog = self.bot.get_cog('UtilsCog')
 
         message = ctx.message
         author = ctx.author
@@ -93,7 +98,7 @@ class PollCog(commands.Cog):
 
         print(role_names)
 
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return
@@ -115,6 +120,8 @@ class PollCog(commands.Cog):
         """
         Détruit un sondage définitivement. Attention! Fonctionne sur tout type de message.
         """
+        
+        utils_cog = self.bot.get_cog('UtilsCog')
 
         message = ctx.message
         author = ctx.author
@@ -122,7 +129,7 @@ class PollCog(commands.Cog):
 
         print(role_names)
 
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return
@@ -134,6 +141,8 @@ class PollCog(commands.Cog):
     async def close_poll(self, ctx, id: int):
         """
         """
+        
+        utils_cog = self.bot.get_cog('UtilsCog')
 
         message = ctx.message
         author = ctx.author
@@ -141,7 +150,7 @@ class PollCog(commands.Cog):
 
         print(role_names)
 
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return

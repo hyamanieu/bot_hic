@@ -37,6 +37,7 @@ class UtilsCog(commands.Cog):
         
     @commands.command(name='crash_log')
     async def crash_log(self, ctx):
+        await self.bot_log_message("Testing crash log message")
         try:
             1/0
         except Exception as e:

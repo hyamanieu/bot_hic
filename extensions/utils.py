@@ -6,6 +6,8 @@ import os
 
 from . import settings
 
+import traceback
+
 log = structlog.get_logger()
 
 class UtilsCog(commands.Cog):
@@ -27,6 +29,22 @@ class UtilsCog(commands.Cog):
                     log.warning(f'Could not find bot log channel with id {BOT_LOG_CHANNEL_ID}')
         except Exception as e:
             log.error('Could not post message to bot log channel', exc_info=e)
+            
+    async def trace_exception(self, *args, exc_info=None, **kwargs):
+        s=f"Exception: {*args} {kwargs}\n"
+        s+=traceback.format_stack()
+        await self.bot_log_message(s)
+        
+    @commands.command(name='crash_log')
+    async def crash_log(self, ctx):
+        try:
+            1/0
+        except Exception as e:
+            await self.trace_exception("It's only a test")
+            
+
+
+        
 
 def setup(bot):
     bot.add_cog(UtilsCog(bot))

@@ -27,12 +27,14 @@ class TeamCog(commands.Cog):
 
         Rajouter des participants à une équipe.
         """
+        
+        utils_cog = self.bot.get_cog('UtilsCog')
 
         message = ctx.message
         author = ctx.author
         role_names = [r.name for  r in author.roles]
 
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return
@@ -57,7 +59,7 @@ class TeamCog(commands.Cog):
         server: discord.Guild = ctx.guild
         role_names = [r.name for  r in author.roles]
 
-        if 'admins' not in role_names:
+        if utils_cog.settings.ADMIN_ROLE not in role_names:
             await message.add_reaction('\U0001F44E')
             await ctx.send("seuls les admins peuvent faire cette action!")
             return
@@ -108,7 +110,7 @@ class TeamCog(commands.Cog):
         }
         
         for r in serv_roles:
-            if r.name.lower() in ['admins','benevoles','bénévoles','coach']:
+            if r.name.lower() in [utils_cog.settings.ADMIN_ROLE,'benevoles','bénévoles','coach']:
                 overwrites[r]=discord.PermissionOverwrite(read_messages=True)
         
         # team_cat = await server.create_category(f'PARTICIPANTS',

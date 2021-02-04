@@ -13,6 +13,8 @@ class HelpCog(commands.Cog):
         
         Affiche un embed avec des informations pour obtenir de l'aide
         """
+        
+        utils = self.bot.get_cog('UtilsCog')
 
         embed = discord.Embed(title="Aide")
         
@@ -21,7 +23,7 @@ class HelpCog(commands.Cog):
         embed.description += "- `!help` : pour obtenir l'aide des commandes\n"
         embed.description += "- `@bénévoles` : pour appeler un bénévole\n"
         embed.description += "- `@coach` : pour être coaché\n"
-        embed.description += "- `@admins` : si quelqu'un doit passer au conseil disciplinaire\n"
+        embed.description += f"- `@{utils.settings.ADMIN_ROLE}` : si quelqu'un doit passer au conseil disciplinaire\n"
         embed.description += "\n"
         embed.description += "Votez en cliquant sous les emojis. Y a un nombre max de vote!\n"
 

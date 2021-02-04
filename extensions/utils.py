@@ -4,11 +4,14 @@ import structlog
 
 import os
 
+from . import settings
+
 log = structlog.get_logger()
 
 class UtilsCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.settings = settings.Settings()
 
     async def bot_log_message(self, *args, **kwargs):
         BOT_LOG_CHANNEL_ID = os.getenv('BOT_LOG_CHANNEL_ID')

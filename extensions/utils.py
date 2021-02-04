@@ -4,7 +4,7 @@ import structlog
 
 import os
 
-from . import settings
+from . import settings, perms
 
 import traceback
 
@@ -36,6 +36,7 @@ class UtilsCog(commands.Cog):
         await self.bot_log_message(s)
         
     @commands.command(name='crash_log')
+    @commands.check(perms.is_support_user)
     async def crash_log(self, ctx):
         await self.bot_log_message("Testing crash log message")
         try:

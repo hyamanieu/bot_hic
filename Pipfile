@@ -7,6 +7,9 @@ name = 'pypi'
 python_version = '3.8'
 
 [packages]
-discord.py = '>1.6.0'
+flask-apscheduler = "*"
+discord = {py = '>1.6.0'}
 python-dotenv = '0.15.0'
-pdfminer.six = '20201018'
+structlog = "*"
+requests = "*"
+"pdfminer.six" = "*"

@@ -18,23 +18,25 @@ class PollCog(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         message = ctx.message
+        
+        if ctx.command:
 
-        if ctx.command.name == 'new_poll':
-            if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!new_poll \"question\" nombre_max_de_vote \"opt1\" \"opt2\"...`")
-        elif ctx.command.name == 'reset_poll':
-            if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!reset_poll id`")
-        elif ctx.command.name == 'destroy_poll':
-            if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!destroy_poll id`")
-        elif ctx.command.name == 'close_poll':
-            if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!close_poll id`")
+            if ctx.command.name == 'new_poll':
+                if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!new_poll \"question\" nombre_max_de_vote \"opt1\" \"opt2\"...`")
+            elif ctx.command.name == 'reset_poll':
+                if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!reset_poll id`")
+            elif ctx.command.name == 'destroy_poll':
+                if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!destroy_poll id`")
+            elif ctx.command.name == 'close_poll':
+                if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!close_poll id`")
 
     @commands.command(name='new_poll')
     @commands.check(perms.is_support_user)

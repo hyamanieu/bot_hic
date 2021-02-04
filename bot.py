@@ -10,12 +10,15 @@ log = structlog.get_logger()
 dotenv_path = join(dirname(__file__), '.env')
 
 if os.path.exists(dotenv_path):
+    log.info('loading environment')
     load_dotenv(dotenv_path)
 
 TOKEN = os.getenv('BOT_TOKEN')
 
+BOT_PREFIX = os.getenv('BOT_PREFIX', '!')
+
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='!',  case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix=BOT_PREFIX,  case_insensitive=True, intents=intents)
 
 @bot.event
 async def on_ready():

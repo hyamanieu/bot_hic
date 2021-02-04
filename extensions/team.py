@@ -13,14 +13,15 @@ class TeamCog(commands.Cog):
     async def on_command_error(self, ctx, error):
         message = ctx.message
 
-        if ctx.command.name == 'teamadd':
-            if isinstance(error, commands.BadArgument) or (isinstance(error, commands.MissingRequiredArgument)):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!teamadd nom_de_lequipe membre1 [membreX...]`")
-        elif ctx.command.name == 'teamup':
-            if isinstance(error, commands.BadArgument) or (isinstance(error, commands.MissingRequiredArgument)):
-                await message.add_reaction('\U0001F44E')
-                await ctx.send("Erreur! La commande est du type `!teamup nom_de_lequipe chef_de_projet membre1 [membreX...]`")
+        if ctx.command:
+            if ctx.command.name == 'teamadd':
+                if isinstance(error, commands.BadArgument) or (isinstance(error, commands.MissingRequiredArgument)):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!teamadd nom_de_lequipe membre1 [membreX...]`")
+            elif ctx.command.name == 'teamup':
+                if isinstance(error, commands.BadArgument) or (isinstance(error, commands.MissingRequiredArgument)):
+                    await message.add_reaction('\U0001F44E')
+                    await ctx.send("Erreur! La commande est du type `!teamup nom_de_lequipe chef_de_projet membre1 [membreX...]`")
         
 
     @commands.command(name='teamadd')
